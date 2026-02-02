@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/DataCompare/static/css/main.8bac6985.css",
+    "main.js": "/DataCompare/static/js/main.23212cab.js",
+    "index.html": "/DataCompare/index.html",
+    "main.8bac6985.css.map": "/DataCompare/static/css/main.8bac6985.css.map",
+    "main.23212cab.js.map": "/DataCompare/static/js/main.23212cab.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8bac6985.css",
+    "static/js/main.23212cab.js"
+  ]
+}
