@@ -50,37 +50,27 @@ export function compareData(dataA, dataB, keyA, keyB, columnMap, onProgress) {
   dataA.forEach(row => {
     mapA.set(row[keyA], row);
   });
-  const diffs = [];
-  const total = dataB.length;
-  dataB.forEach((rowB, idx) => {
-    const key = rowB[keyB];
+  const allKeys = new Set([
+    ...dataA.map(row => row[keyA]),
+    ...dataB.map(row => row[keyB])
+  ]);
+  const resultRows = [];
+  let idx = 0;
+  allKeys.forEach(key => {
     const rowA = mapA.get(key);
-    if (!rowA) {
-      // Row missing in A
-      columnMap.forEach(({ a, b }) => {
-        diffs.push({ key, column: b, valueA: '', valueB: rowB[b] });
-      });
-    } else {
-      // Compare mapped columns
-      columnMap.forEach(({ a, b }) => {
-        if ((rowA[a] || '') !== (rowB[b] || '')) {
-          diffs.push({ key, column: b, valueA: rowA[a] || '', valueB: rowB[b] || '' });
-        }
-      });
-    }
+    const rowB = dataB.find(row => row[keyB] === key);
+    const result = { key };
+    columnMap.forEach(({ a, b }) => {
+      const valueA = rowA ? parseFloat(rowA[a]) || 0 : 0;
+      const valueB = rowB ? parseFloat(rowB[b]) || 0 : 0;
+      result[b + '_diff'] = valueA - valueB;
+    });
+    resultRows.push(result);
     if (onProgress && idx % 100 === 0) {
-      onProgress(Math.round((idx / total) * 100));
+      onProgress(Math.round((idx / allKeys.size) * 100));
     }
-  });
-  // Find rows in A missing from B
-  const keysB = new Set(dataB.map(r => r[keyB]));
-  dataA.forEach(rowA => {
-    if (!keysB.has(rowA[keyA])) {
-      columnMap.forEach(({ a, b }) => {
-        diffs.push({ key: rowA[keyA], column: a, valueA: rowA[a] || '', valueB: '' });
-      });
-    }
+    idx++;
   });
   if (onProgress) onProgress(100);
-  return diffs;
+  return resultRows;
 }

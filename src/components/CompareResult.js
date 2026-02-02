@@ -8,21 +8,19 @@ function CompareResult({ diffRows, columnMap, onBack }) {
   // Prepare preview (first 20 rows)
   const preview = diffRows.slice(0, 20);
 
+  // Get diff column names
+  const diffCols = columnMap.map(({ b }) => b + '_diff');
+
   // Download diff as CSV
   const handleDownload = () => {
-    const csv = Papa.unparse(diffRows.map(row => ({
-      key: row.key,
-      column: row.column,
-      valueA: row.valueA,
-      valueB: row.valueB
-    })));
+    const csv = Papa.unparse(diffRows);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     saveAs(blob, 'diff.csv');
   };
 
   return (
     <div className="compare-result bg-white rounded-xl shadow-md p-8 mt-6">
-      <h2 className="text-xl font-bold mb-4">Differences Preview</h2>
+      <h2 className="text-xl font-bold mb-4">Subtraction Result Preview</h2>
       {diffRows.length === 0 ? (
         <div className="text-green-600 font-semibold">No differences found!</div>
       ) : (
@@ -32,18 +30,18 @@ function CompareResult({ diffRows, columnMap, onBack }) {
               <thead className="bg-blue-50">
                 <tr>
                   <th className="p-2 border">Key</th>
-                  <th className="p-2 border">Column</th>
-                  <th className="p-2 border">File A Value</th>
-                  <th className="p-2 border">File B Value</th>
+                  {diffCols.map(col => (
+                    <th key={col} className="p-2 border">{col}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {preview.map((row, idx) => (
                   <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="border p-2">{row.key}</td>
-                    <td className="border p-2">{row.column}</td>
-                    <td className="border p-2">{row.valueA}</td>
-                    <td className="border p-2">{row.valueB}</td>
+                    {diffCols.map(col => (
+                      <td key={col} className="border p-2">{row[col]}</td>
+                    ))}
                   </tr>
                 ))}
               </tbody>
