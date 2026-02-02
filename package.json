@@ -4,7 +4,7 @@
   "private": true,
   "description": "Local CSV/Excel Compare Tool (React, frontend-only)",
   "main": "src/App.js",
-  "homepage": "https://phaneendramarri.github.io/CSVCompare",
+  "homepage": "https://phaneendramarri.github.io/DataCompare",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
