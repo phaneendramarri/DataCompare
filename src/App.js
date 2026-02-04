@@ -60,7 +60,7 @@ function App() {
     }
   };
 
-  // Recalculate diff whenever files, mapping, or keys change
+  // Recalculate diff and save filtered columns to localStorage whenever files, mapping, or keys change
   useEffect(() => {
     if (
       fileA && fileB &&
@@ -83,6 +83,12 @@ function App() {
         requiredB.forEach(col => { obj[col] = row[col]; });
         return obj;
       });
+      // Save filtered columns to localStorage
+      localStorage.setItem('filteredA', JSON.stringify(filteredA));
+      localStorage.setItem('filteredB', JSON.stringify(filteredB));
+      localStorage.setItem('primaryKeyA', primaryKeyA);
+      localStorage.setItem('primaryKeyB', primaryKeyB);
+      localStorage.setItem('columnMap', JSON.stringify(columnMap));
       const diffs = compareData(
         filteredA,
         filteredB,
